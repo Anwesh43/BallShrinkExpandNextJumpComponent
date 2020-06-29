@@ -1,12 +1,13 @@
 import {useState, useEffect} from 'react'
 
-export const useAnimatedScale = (scGap, delay) => {
+export const useAnimatedScale = (scGap, delay, n) => {
     const [scale, setScale] = useState(0)
     const [animated, setAnimated] = useState(false)
     const [i, setI] = useState(0)
     const [dir, setDir] = useState(0)
     return {
         scale, 
+        i,
         start() {
             if (!animated) {
                 var currScale = scale 
@@ -16,6 +17,14 @@ export const useAnimatedScale = (scGap, delay) => {
                     setScale(currScale)
                     if (currScale > 1) {
                         setScale(1)
+                        setAnimated(false)
+                        if (i + dir < n) {
+                          setI(i + dir)
+                        } else {
+                            setDir(dir * -1)
+                        }
+
+                        clearInterval(interval)
                     }
                 }, delay)
             }
@@ -32,7 +41,7 @@ export const useDimension = () => {
             setH(window.innerHeight)
             return () => {
                 window.onresize = () => {
-                  
+
                 }
             }
         }
